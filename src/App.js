@@ -3,19 +3,19 @@ function App() {
   return (
     <div>
       <div>
-        <Button />
+        <Button>B1</Button>
       </div>
       <div>
-        <Button />
+        <Button>B2 </Button>
       </div>
       <div>
-        <Button />
+        <Button>B3 </Button>
       </div>
       <div>
-        <Button />
+        <Button>B4 </Button>
       </div>
       <div>
-        <Button />
+        <Button>B5 </Button>
       </div>
     </div>
   );
