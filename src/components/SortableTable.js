@@ -1,28 +1,13 @@
 import Table from "./Table";
-import { useState } from "react";
 import { GoArrowDown, GoArrowUp } from "react-icons/go";
+import useSort from "../hooks/use-sort";
+
 
 export default function SortableTable(props) {
-  const [sortOrder, setSortOrder] = useState(null);
-  const [sortBy, setSortBy] = useState(null);
   const { config, data } = props;
-  const handleCLick = (label) => {
-    if (sortBy && label !== sortBy) {
-      setSortOrder("asc");
-      setSortBy(label);
-      return;
-    }
-    if (sortOrder === null) {
-      setSortOrder("asc");
-      setSortBy(label);
-    } else if (sortOrder === "asc") {
-      setSortOrder("desc");
-      setSortBy(label);
-    } else if (sortOrder === "desc") {
-      setSortOrder(null);
-      setSortBy(null);
-    }
-  };
+  const { sortOrder, sortBy, setSortColumn, sortedData } = useSort(data, config);
+
+
   const updatedConfig = config.map((column) => {
     if (!column.sortValue) {
       return column;
@@ -33,7 +18,7 @@ export default function SortableTable(props) {
         <th
           className="cursor-pointer hover:bg-gray-100"
           onClick={() => {
-            handleCLick(column.label);
+            setSortColumn(column.label);
           }}
         >
           <div className="flex items-center">
@@ -44,20 +29,7 @@ export default function SortableTable(props) {
       ),
     };
   });
-  let sortedData = data;
-  if (sortBy && sortOrder) {
-    const { sortValue } = config.find((column) => column.label === sortBy);
-    sortedData = [...data].sort((a, b) => {
-      const valueA = sortValue(a);
-      const valueB = sortValue(b);
-      const reverseOrder = sortOrder === "asc" ? 1 : -1;
-      if (typeof valueA === "string") {
-        return valueA.localeCompare(valueB) * reverseOrder;
-      } else {
-        return (valueA - valueB) * reverseOrder;
-      }
-    });
-  }
+
   return <Table {...props} data={sortedData} config={updatedConfig} />;
 }
 
